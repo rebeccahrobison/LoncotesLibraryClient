@@ -16,3 +16,16 @@ export const createMaterial = (material) => {
     body: JSON.stringify(material),
   }).then((res) => res.json());
 };
+
+export const removeMaterialFromCirc = (id) => {
+  return fetch(`${_apiUrl}/${id}/remove`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+}
+
+export const getAvailableMaterials = () => {
+  return fetch(`${_apiUrl}/available`).then(r => r.json())
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getPatrons } from "../../data/patronsData"
+import { activatePatron, deactivatePatron, getPatrons } from "../../data/patronsData"
 import { Link } from "react-router-dom"
 import { Table } from "reactstrap"
 
@@ -7,9 +7,24 @@ import { Table } from "reactstrap"
 export const PatronList = () => {
   const [patrons, setPatrons] = useState([])
 
-  useEffect(() => {
+  const getAndSetPatrons = () => {
     getPatrons().then(arr => setPatrons(arr))
+  }
+
+  useEffect(() => {
+    getAndSetPatrons()
   }, [])
+
+  const handleDeactivateBtn = (e, id) => {
+    e.preventDefault()
+    console.log("button clicked")
+    deactivatePatron(id).then(() => getAndSetPatrons())
+  }
+
+  const handleActivateBtn = (e, id) => {
+    e.preventDefault()
+    activatePatron(id).then(() => getAndSetPatrons())
+  }
 
   return (
     <div className="container">
@@ -24,7 +39,7 @@ export const PatronList = () => {
             <th>Last Name</th>
             <th>Address</th>
             <th>Email</th>
-            <th>Active</th>
+            {/* <th>Active</th> */}
           </tr>
         </thead>
         <tbody>
@@ -35,9 +50,15 @@ export const PatronList = () => {
               <td>{p.lastName}</td>
               <td>{p.address}</td>
               <td>{p.email}</td>
-              <td>{p.isActive ? 'true' : 'false'}</td>
+              {/* <td>{p.isActive ? 'true' : 'false'}</td> */}
               <td>
                 <Link to={`${p.id}`}>Details</Link>
+              </td>
+              <td>
+                {p.isActive ? 
+                  <button onClick={e => handleDeactivateBtn(e, p.id)}>Deactivate</button> 
+                  : 
+                  <button onClick={e => handleActivateBtn(e, p.id)}>Activate</button>}
               </td>
             </tr>
           ))}
